@@ -10,6 +10,10 @@
   },
   "plugins": ["prettier"],
   "rules": {
+    "no-unused-vars": [
+      "error",
+      { "vars": "all", "args": "none", "ignoreRestSiblings": false }
+    ],
     "import/prefer-default-export": "off",
     "prettier/prettier": "error",
     "import/extensions": [

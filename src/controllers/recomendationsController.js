@@ -1,7 +1,7 @@
 import * as recommendationsService from '../services/recommendationsService.js';
 import RecommendationsError from '../errors/recommendationsError.js';
 
-async function newRecommendation(req, res) {
+async function newRecommendation(req, res, next) {
   if (
     typeof req.body.name !== 'string' ||
     typeof req.body.youtubeLink !== 'string' ||
@@ -24,7 +24,7 @@ async function newRecommendation(req, res) {
     if (error instanceof RecommendationsError) {
       return res.status(400).send({ message: error.message });
     }
-    return res.status(500);
+    return next(error);
   }
 }
 
