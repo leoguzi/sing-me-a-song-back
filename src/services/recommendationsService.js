@@ -19,4 +19,19 @@ async function createRecommendation({ name, youtubeLink }) {
   return { message: 'Ceated!' };
 }
 
-export { createRecommendation };
+async function newVote({ id, vote }) {
+  const result = await recommendationsRepository.registerVote({ id, vote });
+
+  if (!result) {
+    throw new RecommendationsError('Recomendation not found.');
+  }
+
+  if (result.score < -5) {
+    await recommendationsRepository.deleteRecommendation({ id: result.id });
+    return { message: 'Removed recommendation!' };
+  }
+
+  return { message: `${vote > 0 ? 'Up' : 'Down'} vote computed!` };
+}
+
+export { createRecommendation, newVote };

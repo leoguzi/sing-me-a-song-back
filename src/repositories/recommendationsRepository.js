@@ -2,11 +2,24 @@ import connection from '../database.js';
 
 async function insertRecommendation({ name, youtubeLink }) {
   const result = await connection.query(
-    `INSERT INTO recommendations (name, youtube_link, score) VALUE ($1, $2, $3);`,
+    `INSERT INTO recommendations (name, youtube_link, score) VALUES ($1, $2, $3);`,
     [name, youtubeLink, 0]
   );
 
   return result.rowCount;
 }
 
-export { insertRecommendation };
+async function registerVote({ id, vote }) {
+  const result = await connection.query(
+    `UPDATE recommendations SET score=score+$2 WHERE id=$1 RETURNING *;`,
+    [id, vote]
+  );
+
+  return result.rows[0];
+}
+
+async function deleteRecommendation({ id }) {
+  await connection.query(`DELETE FROM recommendations WHERE id=$1;`, [id]);
+}
+
+export { insertRecommendation, registerVote, deleteRecommendation };
