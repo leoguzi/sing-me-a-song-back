@@ -1,10 +1,11 @@
 import { Router } from 'express';
-import * as recomendationsController from '../controllers/recomendationsController.js';
+import * as recommendationsController from '../controllers/recomendationsController.js';
 
 const router = new Router();
 
-router.post('/', recomendationsController.newRecommendation);
-router.post('/:id/upvote', recomendationsController.upVoteRecommendation);
-router.post('/:id/downvote', recomendationsController.downVoteRecommendation);
+router.post('/', recommendationsController.newRecommendation);
+router.post('/:id/upvote', recommendationsController.upVoteRecommendation);
+router.post('/:id/downvote', recommendationsController.downVoteRecommendation);
+router.get('/random', recommendationsController.randomRecommendation);
 
 export default router;

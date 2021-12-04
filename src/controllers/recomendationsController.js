@@ -61,4 +61,22 @@ async function downVoteRecommendation(req, res, next) {
   }
 }
 
-export { newRecommendation, upVoteRecommendation, downVoteRecommendation };
+async function randomRecommendation(req, res, next) {
+  try {
+    const recommendation = await recommendationsService.getRecommendation();
+
+    return res.status(200).send(recommendation);
+  } catch (error) {
+    if (error instanceof RecommendationsError) {
+      return res.status(404).send({ message: error.message });
+    }
+    return next(error);
+  }
+}
+
+export {
+  newRecommendation,
+  upVoteRecommendation,
+  downVoteRecommendation,
+  randomRecommendation,
+};

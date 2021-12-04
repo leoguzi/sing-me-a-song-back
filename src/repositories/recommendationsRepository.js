@@ -22,4 +22,16 @@ async function deleteRecommendation({ id }) {
   await connection.query(`DELETE FROM recommendations WHERE id=$1;`, [id]);
 }
 
-export { insertRecommendation, registerVote, deleteRecommendation };
+async function fetchRecommendation({ scoreLimit }) {
+  const result = await connection.query(
+    `SELECT * FROM recommendations WHERE score ${scoreLimit} ORDER BY RANDOM() LIMIT 1;`
+  );
+  return result.rows[0];
+}
+
+export {
+  insertRecommendation,
+  registerVote,
+  deleteRecommendation,
+  fetchRecommendation,
+};

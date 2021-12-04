@@ -34,4 +34,25 @@ async function newVote({ id, vote }) {
   return { message: `${vote > 0 ? 'Up' : 'Down'} vote computed!` };
 }
 
-export { createRecommendation, newVote };
+async function getRecommendation() {
+  let scoreLimit = Math.random() > 0.3 ? '>10' : '<=10';
+
+  let recommendation = await recommendationsRepository.fetchRecommendation({
+    scoreLimit,
+  });
+
+  if (scoreLimit === '>10' && !recommendation) {
+    scoreLimit = '<=10';
+    recommendation = await recommendationsRepository.fetchRecommendation({
+      scoreLimit,
+    });
+  }
+
+  if (!recommendation) {
+    throw new RecommendationsError('No recommendations found.');
+  }
+
+  return recommendation;
+}
+
+export { createRecommendation, newVote, getRecommendation };
