@@ -88,6 +88,9 @@ async function topRecommendations(req, res, next) {
 
     return res.status(200).send(recommendations);
   } catch (error) {
+    if (error instanceof RecommendationsError) {
+      return res.status(404).send({ message: error.message });
+    }
     return next(error);
   }
 }
