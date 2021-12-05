@@ -45,12 +45,12 @@ async function upVoteRecommendation(req, res, next) {
 }
 
 async function downVoteRecommendation(req, res, next) {
-  let { id } = req.params;
-  id = Number(id);
-  if (typeof id !== 'number' || id % 1 !== 0) {
-    return res.status(400).send({ message: 'Bad request!' });
-  }
   try {
+    let { id } = req.params;
+    id = Number(id);
+    if (typeof id !== 'number' || id % 1 !== 0) {
+      return res.status(400).send({ message: 'Bad request!' });
+    }
     const result = await recommendationsService.newVote({ id, vote: -1 });
     return res.status(200).send({ message: result.message });
   } catch (error) {
@@ -74,9 +74,28 @@ async function randomRecommendation(req, res, next) {
   }
 }
 
+async function topRecommendations(req, res, next) {
+  try {
+    let { amount } = req.params;
+    amount = Number(amount);
+    if (typeof amount !== 'number' || amount % 1 !== 0) {
+      return res.status(400).send({ message: 'Bad request!' });
+    }
+
+    const recommendations = await recommendationsService.getTopRecommendations({
+      amount,
+    });
+
+    return res.status(200).send(recommendations);
+  } catch (error) {
+    return next(error);
+  }
+}
+
 export {
   newRecommendation,
   upVoteRecommendation,
   downVoteRecommendation,
   randomRecommendation,
+  topRecommendations,
 };

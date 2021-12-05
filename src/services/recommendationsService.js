@@ -27,7 +27,12 @@ async function newVote({ id, vote }) {
   }
 
   if (result.score < -5) {
-    await recommendationsRepository.deleteRecommendation({ id: result.id });
+    const deleteResult = await recommendationsRepository.deleteRecommendation({
+      id: result.id,
+    });
+    if (!deleteResult) {
+      throw new RecommendationsError('Recommentadion already removed.');
+    }
     return { message: 'Removed recommendation!' };
   }
 
@@ -51,8 +56,21 @@ async function getRecommendation() {
   if (!recommendation) {
     throw new RecommendationsError('No recommendations found.');
   }
-
   return recommendation;
 }
 
-export { createRecommendation, newVote, getRecommendation };
+async function getTopRecommendations({ amount }) {
+  const recommendations =
+    await recommendationsRepository.fetchTopRecommendations({ amount });
+  if (!recommendations) {
+    throw new RecommendationsError('No recommendations found.');
+  }
+  return recommendations;
+}
+
+export {
+  createRecommendation,
+  newVote,
+  getRecommendation,
+  getTopRecommendations,
+};

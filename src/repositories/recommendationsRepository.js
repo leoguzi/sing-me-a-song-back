@@ -19,14 +19,32 @@ async function registerVote({ id, vote }) {
 }
 
 async function deleteRecommendation({ id }) {
-  await connection.query(`DELETE FROM recommendations WHERE id=$1;`, [id]);
+  const result = await connection.query(
+    `DELETE FROM recommendations WHERE id=$1;`,
+    [id]
+  );
+  return result.rowCount;
 }
 
 async function fetchRecommendation({ scoreLimit }) {
   const result = await connection.query(
-    `SELECT * FROM recommendations WHERE score ${scoreLimit} ORDER BY RANDOM() LIMIT 1;`
+    `SELECT id, name, youtube_link as "youtubeLink", score 
+        FROM recommendations WHERE score ${scoreLimit} 
+          ORDER BY RANDOM() LIMIT 1;`
   );
+
   return result.rows[0];
+}
+
+async function fetchTopRecommendations({ amount }) {
+  const result = await connection.query(
+    `SELECT id, name, youtube_link as "youtubeLink", score 
+        FROM recommendations 
+            ORDER BY score DESC LIMIT $1;`,
+    [amount]
+  );
+
+  return result.rows;
 }
 
 export {
@@ -34,4 +52,5 @@ export {
   registerVote,
   deleteRecommendation,
   fetchRecommendation,
+  fetchTopRecommendations,
 };
