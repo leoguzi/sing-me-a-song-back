@@ -40,8 +40,7 @@ async function newVote({ id, vote }) {
 }
 
 async function getRecommendation() {
-  let scoreLimit = Math.random() > 0.3 ? '>10' : '<=10';
-
+  let scoreLimit = Number(Math.random().toFixed(2)) >= 0.3 ? '>10' : '<=10';
   let recommendation = await recommendationsRepository.fetchRecommendation({
     scoreLimit,
   });

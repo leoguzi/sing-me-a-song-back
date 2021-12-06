@@ -125,7 +125,7 @@ describe('getRecommendation', () => {
     id: 10,
     name: 'Recommendation Name',
     youtube_link: 'https://youtu.be/5mpafLYHVd0',
-    score: 10,
+    score: 0,
   };
 
   it('Trows a RecommendationError if no recommendations are found', async () => {
@@ -138,8 +138,29 @@ describe('getRecommendation', () => {
     await expect(promise).rejects.toThrowError(RecommendationsError);
   });
 
-  it('Returns a recommendation', async () => {
-    jest.spyOn(Math, 'random').mockReturnValueOnce(0.2);
+  it('Returns a recommendation with a score < 10 30% of the times', async () => {
+    jest.spyOn(Math, 'random').mockReturnValueOnce(0.29);
+    jest
+      .spyOn(recommendationsRepository, 'fetchRecommendation')
+      .mockReturnValueOnce(recommendation);
+
+    const result = await sut.getRecommendation();
+    expect(result).toEqual(recommendation);
+  });
+
+  it('Returns a recommendation with a score > 10 70% of the times', async () => {
+    recommendation.score = 11;
+    jest.spyOn(Math, 'random').mockReturnValueOnce(0.3);
+    jest
+      .spyOn(recommendationsRepository, 'fetchRecommendation')
+      .mockReturnValueOnce(recommendation);
+
+    const result = await sut.getRecommendation();
+    expect(result).toEqual(recommendation);
+  });
+
+  it('Returns a recommendation with a score > 10 70% of the times', async () => {
+    jest.spyOn(Math, 'random').mockReturnValueOnce(0.31);
     jest
       .spyOn(recommendationsRepository, 'fetchRecommendation')
       .mockReturnValueOnce(recommendation);
