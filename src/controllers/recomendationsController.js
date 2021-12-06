@@ -48,7 +48,7 @@ async function downVoteRecommendation(req, res, next) {
   try {
     let { id } = req.params;
     id = Number(id);
-    if (typeof id !== 'number' || id % 1 !== 0) {
+    if (typeof id !== 'number' || id % 1 !== 0 || !id) {
       return res.status(400).send({ message: 'Bad request!' });
     }
     const result = await recommendationsService.newVote({ id, vote: -1 });
@@ -78,7 +78,7 @@ async function topRecommendations(req, res, next) {
   try {
     let { amount } = req.params;
     amount = Number(amount);
-    if (typeof amount !== 'number' || amount % 1 !== 0) {
+    if (typeof amount !== 'number' || amount % 1 !== 0 || !amount) {
       return res.status(400).send({ message: 'Bad request!' });
     }
 

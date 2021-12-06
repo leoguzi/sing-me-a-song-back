@@ -16,7 +16,7 @@ async function createRecommendation({ name, youtubeLink }) {
 
   await recommendationsRepository.insertRecommendation({ name, youtubeLink });
 
-  return { message: 'Ceated!' };
+  return { message: 'Created.' };
 }
 
 async function newVote({ id, vote }) {

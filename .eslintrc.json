@@ -1,5 +1,6 @@
 {
   "env": {
+    "jest/globals": true,
     "browser": true,
     "es2021": true
   },
@@ -8,7 +9,7 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["prettier"],
+  "plugins": ["jest", "prettier"],
   "rules": {
     "no-unused-vars": [
       "error",
